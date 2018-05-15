@@ -6,11 +6,11 @@ sudo apt-get update
 sudo apt-get install git zsh fortune cowsay lolcat python python-pip build-essential
 
 # Install oh-my-zsh
-if [[ -z "$(echo $ZSH | grep "oh-my-zsh")" ]]; then
+if [[ -d "~/.oh-my-zsh" ]]; then
+  echo "oh-my-zsh found..."
+else
   echo "Installing oh-my-zsh..."
   wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
-else
-  echo "oh-my-zsh found..."
 fi
 
 # Install tmux
@@ -41,23 +41,27 @@ else  echo "exa found..."
 fi
 
 # Install howdoi
-pip install howdoi
+git clone https://github.com/gleitz/howdoi.git
+cd howdoi
+sudo python ./setup.py install
+cd ..
+rm -rf ./howdoi
 
 echo "Making ZSH default Shell..."
 sudo chsh -s `which zsh`
 
-if [[ -d "$(echo $ZSH/custom/themes/powerlevel9k)" ]]; then
+if [[ -d "~/.oh-my-zsh/custom/themes/powerlevel9k)" ]]; then
   echo "Theme directory found..."
 else
   echo "Cloning theme..."
-  git clone https://github.com/bhilburn/powerlevel9k.git $ZSH/custom/themes/powerlevel9k || true
+  sudo git clone https://github.com/bhilburn/powerlevel9k.git $ZSH/custom/themes/powerlevel9k || true
 fi
 
-if [[ -d "$(echo $ZSH/custom/plugins/alias-tips)" ]]; then
+if [[ -d "~/.oh-my-zsh/custom/plugins/alias-tips)" ]]; then
   echo "alias-tips pluign found..."
 else
   echo "Installing alias-tips plugin..."
-  git clone https://github.com/djui/alias-tips.git $ZSH/custom/plugins/alias-tips || true
+  sudo git clone https://github.com/djui/alias-tips.git $ZSH/custom/plugins/alias-tips || true
 fi
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
