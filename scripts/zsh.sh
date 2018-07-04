@@ -3,7 +3,7 @@
 # Install git, zsh, fortune-mod, cowsay, lolcat
 echo "Installing dependencies..."
 sudo apt-get update
-sudo apt-get install git zsh fortune cowsay lolcat python python-pip build-essential
+sudo apt-get install git zsh fortune cowsay lolcat python python-pip build-essential jq
 
 # Install oh-my-zsh
 if [[ -d "~/.oh-my-zsh" ]]; then
@@ -41,11 +41,14 @@ else  echo "exa found..."
 fi
 
 # Install howdoi
-git clone https://github.com/gleitz/howdoi.git
-cd howdoi
-sudo python ./setup.py install
-cd ..
-rm -rf ./howdoi
+if [[ -z "$(which howdoi)" ]]; then
+  git clone https://github.com/gleitz/howdoi.git
+  cd howdoi
+  sudo python ./setup.py install
+  cd ..
+  sudo rm -rf ./howdoi
+else  echo "howdoi found..."
+fi
 
 echo "Making ZSH default Shell..."
 sudo chsh -s `which zsh`
@@ -62,6 +65,14 @@ if [[ -d "~/.oh-my-zsh/custom/plugins/alias-tips)" ]]; then
 else
   echo "Installing alias-tips plugin..."
   sudo git clone https://github.com/djui/alias-tips.git ~/.oh-my-zsh/custom/plugins/alias-tips || true
+fi
+
+
+if [[ -d "~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting)" ]]; then
+  echo "zsh-syntax-highlighting pluign found..."
+else
+  echo "Installing zsh-syntax-highlighting plugin..."
+  sudo git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 fi
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
